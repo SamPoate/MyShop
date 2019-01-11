@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using MyShop.Core.Models;
+using MyShop.Core.ViewModels;
 using MyShop.DataAccess.InMemory;
 
 namespace MyShop.WebUI.Controllers
@@ -12,10 +14,12 @@ namespace MyShop.WebUI.Controllers
     public class ProductManagerController : Controller
     {
         private ProductRepository context;
+        private ProductCategoryRepository productCategories;
 
         public ProductManagerController()
         {
             context = new ProductRepository();
+            productCategories = new ProductCategoryRepository();
         }
 
         // GET: ProductManager
@@ -27,8 +31,12 @@ namespace MyShop.WebUI.Controllers
 
         public ActionResult Create()
         {
-            Product product = new Product();
-            return View(product);
+            ProductManagerViewModel viewModel = new ProductManagerViewModel();
+
+            viewModel.Product = new Product();
+            viewModel.ProductCategories = productCategories.Collection();
+
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -47,9 +55,9 @@ namespace MyShop.WebUI.Controllers
             }
         }
 
-        public ActionResult Edit(string Id)
+        public ActionResult Edit(string id)
         {
-            Product product = context.Find(Id);
+            Product product = context.Find(id);
 
             if (product == null)
             {
@@ -57,14 +65,18 @@ namespace MyShop.WebUI.Controllers
             }
             else
             {
-                return View(product);
+                ProductManagerViewModel viewModel = new ProductManagerViewModel();
+                viewModel.Product = product;
+                viewModel.ProductCategories = productCategories.Collection();
+
+                return View(viewModel);
             }
         }
 
         [HttpPost]
-        public ActionResult Edit(Product product, string Id)
+        public ActionResult Edit(Product product, string id)
         {
-            Product productToEdit = context.Find(Id);
+            Product productToEdit = context.Find(id);
 
             if (productToEdit == null)
             {
@@ -89,9 +101,9 @@ namespace MyShop.WebUI.Controllers
             }
         }
 
-        public ActionResult Delete(string Id)
+        public ActionResult Delete(string id)
         {
-            Product productToDelete = context.Find(Id);
+            Product productToDelete = context.Find(id);
 
             if (productToDelete == null)
             {
