@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MyShop.Core.ViewModels.BasketItemViewModel>
+﻿@using System.ServiceModel.Configuration
+@model IEnumerable<MyShop.Core.ViewModels.BasketItemViewModel>
 
 @{
     ViewBag.Title = "Basket";
@@ -45,9 +46,14 @@
     </tr>
 }
     <tr>
-        <td colspan="4" style="text-align: right"><strong>Total</strong></td>
+        <td colspan="4" style="text-align: right">
+            <strong>Total</strong>
+        </td>
         <td>
             @String.Format("{0:c}", (from p in Model select p.Price * p.Quantity).Sum())
+        </td>
+        <td>
+            <a href="@Url.Action("Checkout", "Basket")">Checkout *ding dong*</a>
         </td>
     </tr>
 
