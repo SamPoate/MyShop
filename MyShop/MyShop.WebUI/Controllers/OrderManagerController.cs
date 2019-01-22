@@ -8,6 +8,7 @@ using MyShop.Core.Models;
 
 namespace MyShop.WebUI.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class OrderManagerController : Controller
     {
         private IOrderService orderService;
